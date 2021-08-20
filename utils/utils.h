@@ -69,6 +69,12 @@ size_t read_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFil
 */
 int list_matched_filename_app(const char* folder, const char* pattern, char* name_list, size_t name_size, int name_max_count);
 
+/*@brief 打印相对app路径下匹配到的文件名
+*@param  const char* folder     文件夹相对APP的路径
+*@param  const char* pattern    名字
+*/
+int print_matched_filename_app(const char* folder, const char* pattern);
+
 /*@brief 创建相对app路径文件的图片，
 *@param const char*  folder   app中的文件夹
 *@param char*        rowdata  图片具体数据

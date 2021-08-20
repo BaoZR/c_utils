@@ -20,6 +20,7 @@ int main()
     read_data_hex(buffer, 500 * 200, "raw.data");
     save_gray_bmp_app("222\\222", NULL, buffer, 500, 200);
     save_gray_bmp_app("333", "fff", buffer, 500, 200);
+    print_matched_filename_app(NULL,"*.*");
 }
 
 

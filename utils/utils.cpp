@@ -21,7 +21,7 @@ size_t write_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFi
     //    fwrite(pucBuff + i, sizeof(char), 1, fp);
     //}
 
-    size_t iRet = fwrite(pucBuff, uiBuffSize, 1, fp);//未测试过
+    size_t iRet = fwrite(pucBuff, uiBuffSize, 1, fp);
     fclose(fp);
     return iRet;
 }
@@ -51,11 +51,13 @@ int list_matched_filename_app(const char* folder, const char* pattern, char* nam
     GetModuleFileNameA(NULL, app_path, FILENAME_MAX);
     strrchr(app_path, '\\')[1] = 0;
 
-    sprintf_s(temp_path, "%s%s\\%s", app_path, folder, pattern);
-    if (_access(temp_path, 0) < 0) {
-        printf("path not exist\n");
-        return -1;
+    if (folder != NULL) {
+        sprintf_s(temp_path, "%s%s\\%s", app_path, folder, pattern);
+    }else{
+         sprintf_s(temp_path, "%s%s", app_path, pattern);
     }
+
+
     //printf("%s\n",temp_path);
     if ((hFile = _findfirst(temp_path, &file_info)) == -1L) {
        // printf("NO files in directory!\n");
@@ -66,6 +68,40 @@ int list_matched_filename_app(const char* folder, const char* pattern, char* nam
             memcpy(name_list + index * name_size, file_info.name, name_size);
             index++;
         } while ((_findnext(hFile, &file_info) == 0) && (index < name_max_count));
+    };
+    _findclose(hFile);
+    return index;
+}
+
+int print_matched_filename_app(const char* folder, const char* pattern)
+{
+    struct _finddata_t file_info;
+    intptr_t hFile;
+    int index = 0;
+    char temp_path[FILENAME_MAX] = { 0 };
+    char app_path[FILENAME_MAX] = { 0 };
+
+    GetModuleFileNameA(NULL, app_path, FILENAME_MAX);
+    strrchr(app_path, '\\')[1] = 0;
+
+    if (folder != NULL) {
+        sprintf_s(temp_path, "%s%s\\%s", app_path, folder, pattern);
+    }
+    else {
+        sprintf_s(temp_path, "%s%s", app_path, pattern);
+    }
+
+    //printf("%s\n", temp_path);
+    
+    if ((hFile = _findfirst(temp_path, &file_info)) == -1L) {
+        // printf("NO files in directory!\n");
+        return 0;//没有找到任何文件
+    }
+    else {
+        do {
+            index++;
+            printf("NO.%d %s\n", index, file_info.name);
+        } while (_findnext(hFile, &file_info) == 0);
     };
     _findclose(hFile);
     return index;
