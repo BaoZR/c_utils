@@ -107,6 +107,18 @@ int print_matched_filename_app(const char* folder, const char* pattern)
     return index;
 }
 
+int auto_list_filename_app(const char* folder, const char* pattern, char** name_list, int name_size, int* name_count)
+{
+    *name_count = count_filename_app(folder, pattern);
+     if (*name_count < 0)
+     {
+        *name_count = 0;//保证为非负数
+        return -1;//返回异常值
+     }
+     *name_list = (char*)malloc(*name_count * name_size);
+     return list_matched_filename_app(folder, pattern, *name_list, name_size, *name_count);
+}
+
 int save_gray_bmp_app(const char* folder, const char* pre_name, unsigned char* rowdata, size_t width, size_t  height)
 {
     long img_head = 1078;

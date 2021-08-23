@@ -66,7 +66,8 @@ size_t read_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFil
  *@param  char*       name_list      名字缓存路径基地址 需提前分配好内存大小
  *@param  int         name_size      每个名字的长度
  *@param              name_max_count 文件名的个数，已经知道有多少文件了
-*/
+ *@return 返回值为找到的文件个数
+ */
 int list_matched_filename_app(const char* folder, const char* pattern, char* name_list, size_t name_size, int name_max_count);
 
 /*@brief 打印相对app路径下匹配到的文件名
@@ -74,6 +75,16 @@ int list_matched_filename_app(const char* folder, const char* pattern, char* nam
 *@param  const char* pattern    名字
 */
 int print_matched_filename_app(const char* folder, const char* pattern);
+
+/*@brief 一个相对自动化的函数，可以枚举相对app路径下匹配到的文件名,要记得释放name_list中分配的内存
+ *@param  const char* addr           文件路径 相对APP的路径
+ *@param  const char* pattern	     名字匹配模板 可包含*或者？
+ *@param  char**      name_list      名字缓存路径基地址，会在函数中分配内存
+ *@param  int         name_size      每个名字的长度
+ *@param  int*        name_max_count 文件名的个数，会在函数中赋值。
+ *@return 返回值为找到的文件个数，如果为负值则发生了异常
+ */
+int auto_list_filename_app(const char* folder, const char* pattern, char** name_list, int name_size, int* name_count);
 
 /*@brief 创建相对app路径文件的图片，
 *@param const char*  folder   app中的文件夹
