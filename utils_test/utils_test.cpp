@@ -25,15 +25,17 @@ int main()
     
     //print_matched_filename_app(NULL,"*");
 
-    char* namelist = nullptr;
-    
-    int name_count = 0;
-    auto_list_filename_app("333", "*.bmp", &namelist,FILENAME_MAX,&name_count);
-    std::unique_ptr<char> p(namelist);
-    for (int i = 0; i < name_count; i++) {
-        printf_s("NO.%d %s\n", i, namelist + i * FILENAME_MAX);
-    }
-    
+    //char* namelist = nullptr;
+    //
+    //int name_count = 0;
+    //auto_list_filename_app("333", "*.bmp", &namelist,FILENAME_MAX,&name_count);
+    //std::unique_ptr<char> p(namelist);
+    //for (int i = 0; i < name_count; i++) {
+    //    printf_s("NO.%d %s\n", i, namelist + i * FILENAME_MAX);
+    //}
+    BYTE buff[524289];
+    read_data_hex(buff, 524289, "C:\\1.wav");
+    write_data_hex(buff, 524289, "C:\\2.wav");
 
     //char* g = nullptr;
     //test(&g);
