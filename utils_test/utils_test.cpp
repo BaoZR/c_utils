@@ -33,9 +33,9 @@ int main()
     //for (int i = 0; i < name_count; i++) {
     //    printf_s("NO.%d %s\n", i, namelist + i * FILENAME_MAX);
     //}
-    BYTE buff[524289];
-    read_data_hex(buff, 524289, "C:\\1.wav");
-    write_data_hex(buff, 524289, "C:\\2.wav");
+    BYTE* buff = (BYTE*)malloc(100000);
+    read_data_hex(buff, 100000, "c:\\raw.data");
+    add8GreyBmpHead2File(buff, 500, 200, "c:\\1.bmp");
 
     //char* g = nullptr;
     //test(&g);

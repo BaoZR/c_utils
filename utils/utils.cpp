@@ -294,3 +294,67 @@ int add8GreyBmpHead(BYTE* pixData, size_t width, size_t height, BYTE* desData)
 
     return 0;
 }
+
+int add8GreyBmpHead2File(BYTE* pixData, size_t width, size_t height, const char* desFile)
+{
+    BYTE bitCount = 8, color = 128;
+
+    FILE* out;
+    BMPFILETYPE bft;
+    BMPFILEHEAD bfh;
+    BMPINFOHEAD bih;
+    RGBQUAD rgbquad[256];
+    DWORD LineByte, ImgSize;
+    LineByte = WIDTHBYTES(width * bitCount); //计算位图一行的实际宽度并确保它为32的倍数
+    ImgSize = height * LineByte;             //图片像素大小
+
+    for (int p = 0; p < 256; p++)
+    {
+        rgbquad[p].rgbBlue = (BYTE)p;
+        rgbquad[p].rgbGreen = (BYTE)p;
+        rgbquad[p].rgbRed = (BYTE)p;
+        rgbquad[p].rgbReserved = (BYTE)0;
+    }
+    //bmp file's type
+    bft.bfType = 0x4d42;
+
+    //bmp fileheader's info
+    bfh.bfSize = (DWORD)(54 + 4 * 256 + ImgSize);
+    bfh.bfReserved1 = 0;
+    bfh.bfReserved2 = 0;
+    bfh.bfOffBits = (DWORD)(54 + 4 * 256);
+
+    //bmp file's infoheader
+    bih.biSize = 40; //本位图信息头的长度，为40字节
+    bih.biWidth = width;
+    bih.biHeight = height;
+    bih.biPlanes = 1;
+    bih.biBitCount = bitCount; //位图颜色位深
+    bih.biCompression = 0;     //是否压缩:0不压缩
+    bih.biSizeImage = ImgSize; //像素数据大小;
+    bih.biXPelsPerMeter = 0;
+    bih.biYPelsPerMeter = 0;
+    bih.biClrUsed = 0;      //用到的颜色数,为0则是 2^颜色位深
+    bih.biClrImportant = 0; //重要的颜色数,为0则全部都重要
+    fopen_s(&out, desFile, "w+b");
+
+    if (out)
+    {
+        //write bmp file's type
+        fwrite(&bft, sizeof(BMPFILETYPE), 1, out);
+        //write bmp file's header info
+        fwrite(&bfh, sizeof(BMPFILEHEAD), 1, out);
+        //write bmp file's infoheader
+        fwrite(&bih, sizeof(BMPINFOHEAD), 1, out);
+        //write bmp file's RGBQUAD data
+        fwrite(&rgbquad, sizeof(RGBQUAD), sizeof(rgbquad) / sizeof(RGBQUAD), out);
+        //writing pix data to file
+        fwrite(pixData, sizeof(BYTE), ImgSize, out);
+    }
+    if (out)
+        fclose(out);
+    //--------------------------------------
+    return 0;
+
+    
+}

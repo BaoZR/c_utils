@@ -124,8 +124,8 @@ int get_app_path(char* app_path);
 * 参数:
 * 参数名         参数类型      IN/OUT/INOUT      备注
 * pixData        BYTE *        IN               原始数据
-* width          int           IN               图片高
-* height         int           IN               图片宽
+* width          int           IN               图片宽
+* height         int           IN               图片高
 * desData        BYTE *        OUT              内存中加完头的数据块
 * 返回值：
 * 类型：int
@@ -134,6 +134,15 @@ int get_app_path(char* app_path);
  **/
 int add8GreyBmpHead(BYTE* pixData, size_t width,size_t height, BYTE* desData);
 
+/*
+* @brief 将原始数据加上8位灰度头，输出到一个文件中
+* @param BYTE*          pixData     IN  原始数据
+* @param int            width       IN  图片宽
+* @param int            height      IN  图片高
+* @param const char*    filepath    OUT 输出的文件路径
+* @return 无
+*/
+int add8GreyBmpHead2File(BYTE* pixData, size_t width, size_t height, const char* desFile);
 
 
 
