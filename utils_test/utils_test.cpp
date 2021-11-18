@@ -1,12 +1,33 @@
 ﻿// utils_test.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
-
-
-#include "utils.h"
+#ifdef _DEBUG
 #include <vld.h>
+#endif
+
+#include "../include/utils.h"
+
+#include "../include/svpng.inc"
+#ifdef WIN64
+    #ifdef _DEBUG
+        #pragma comment(lib,"../x64/Debug/utils.lib")   
+    #endif
+    #ifdef NDEBUG
+        #pragma comment(lib,"../x64/Release/utils.lib")
+    #endif
+#else
+#ifndef WIN64
+    
+    #ifdef _DEBUG
+        #pragma comment(lib,"../x86/Debug/utils.lib")
+    #endif
+    #ifdef NDEBUG
+    #pragma comment(lib,"../x86/Release/utils.lib")
+    #endif
+#endif
+#endif
 
 
-#pragma comment(lib,"utils.lib")
+
 
 //int auto_list_filename_app(const char* folder, const char* pattern, char** name_list,int name_size,int* name_count);
 
@@ -34,9 +55,11 @@ int main()
     //    printf_s("NO.%d %s\n", i, namelist + i * FILENAME_MAX);
     //}
     BYTE* buff = (BYTE*)malloc(100000);
-    read_data_hex(buff, 100000, "c:\\raw.data");
-    add8GreyBmpHead2File(buff, 500, 200, "c:\\1.bmp");
-
+    read_data_hex(buff, 100000, "../raw.data");
+    save_gray_bmp_app("picture", NULL, buff, 500, 200);
+    //FILE* fp = fopen("rgb.png", "wb+");
+    //svpng(fp, 500, 200, buff, 0);
+    free(buff);
     //char* g = nullptr;
     //test(&g);
     //std::unique_ptr<char> p(g);

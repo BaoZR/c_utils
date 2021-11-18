@@ -3,7 +3,9 @@
 
 #include "pch.h"
 #include "framework.h"
-#include "utils.h"
+#include "../include/utils.h"
+
+
 
 size_t write_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFileNm)
 {
@@ -357,4 +359,70 @@ int add8GreyBmpHead2File(BYTE* pixData, size_t width, size_t height, const char*
     return 0;
 
     
+}
+//给24位的灰度图加头//该函数未经过测试
+int add24GreyBmpHead2File(BYTE* pixData, size_t width, size_t height, const char* desFile)
+{
+    FILE* out;
+    fopen_s(&out, desFile, "w+b");
+
+    int m_nBitCount = 24;
+    LONG m_nHeight = height;
+    LONG m_nWidth = width;
+    LONG lLineBytes24 = ((m_nWidth * 24 + 31) / 32 * 4);
+    
+    //建立一个位图文件头变量，并为此变量赋值
+    BITMAPFILEHEADER bf;
+    //位图是24位的，则位图像素数据的偏移地址就为位图的前两部分的字节数之和
+    //即为：文件头+信息头
+    bf.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+    //将位图文件头中的保留为都置零
+    bf.bfReserved1 = 0;
+    bf.bfReserved2 = 0;
+    //如果位图为24位的，则位图文件大小就为位图的三部分之和
+    //即为：文件头+信息头+像素数据
+    bf.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + m_nHeight * lLineBytes24;
+    //位图文件的类型为BM
+    bf.bfType = ((WORD)'M' << 8 | 'B');
+    //将位图文件头写入文件
+    fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, out);
+
+    //写入像素数据
+    fwrite(pixData, m_nHeight * lLineBytes24, 1, out);
+    //关闭文件
+    fclose(out);
+    return 0;
+}
+
+/******************************************************************************
+*函数功能：将8位位图转换为24位位图 该函数未经过测试
+*函数声明：
+   BOOL Bitmap8To24(
+    BYTE* srcImage,  -指向源图像的像素数据的指针
+    BYTE* dstImage,  -指向目的图像的像素数据的指针
+    LONG imageWidth, -源图像的宽度(像素数)
+    LONG imageHeight -源图像的高度(像素数)
+    )
+******************************************************************************/
+bool Bitmap8To24(BYTE* srcImage, BYTE* dstImage, LONG imageWidth, LONG imageHeight);
+
+bool Bitmap8To24(BYTE* srcImage, BYTE* dstImage, LONG imageWidth, LONG imageHeight)
+{
+    LONG lLineBytes24 = ((imageWidth * 24 + 31) / 32 * 4);
+    LONG lLineBytes8 = ((imageWidth * 8 + 31) / 32 * 4);
+    int n, j;
+    for (int i = 0; i < imageHeight; i++)
+    {
+        for (j = 0, n = 0; j < lLineBytes8; j++, n++)
+        {
+            BYTE gray = *(srcImage + lLineBytes8 * i + j);
+            *(dstImage + lLineBytes24 * i + n) = gray;
+            n++;
+            *(dstImage + lLineBytes24 * i + n) = gray;
+            n++;
+            *(dstImage + lLineBytes24 * i + n) = gray;
+        }
+    }
+
+    return true;
 }
