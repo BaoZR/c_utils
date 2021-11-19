@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
-    <IncludePath>C:\Program Files (x86)\Visual Leak Detector\include;$(solutionDir)utils;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files (x86)\Visual Leak Detector\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -147,9 +147,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="utils_test.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\utils\svpng.inc" />

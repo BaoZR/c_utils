@@ -3,11 +3,12 @@
 
 #include "pch.h"
 #include "framework.h"
+#define UTILSAPI_EXPORTS
 #include "../include/utils.h"
 
 
 
-size_t write_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFileNm)
+size_t UTILSAPI write_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFileNm)
 {
     FILE* fp;
     fopen_s(&fp, pcFileNm, "wb+");
@@ -28,7 +29,7 @@ size_t write_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFi
     return iRet;
 }
 
-size_t read_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFileNm)
+size_t UTILSAPI read_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFileNm)
 {
     FILE* fp;;
     fopen_s(&fp, pcFileNm, "rb");
@@ -42,7 +43,7 @@ size_t read_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFil
     return iRet;
 }
 
-int list_matched_filename_app(const char* folder, const char* pattern, char* name_list, size_t name_size, int name_max_count)
+int UTILSAPI list_matched_filename_app(const char* folder, const char* pattern, char* name_list, int name_size, int name_max_count)
 {
     struct _finddata_t file_info;
     intptr_t hFile;
@@ -67,7 +68,7 @@ int list_matched_filename_app(const char* folder, const char* pattern, char* nam
     }
     else {
         do {
-            memcpy(name_list + index * name_size, file_info.name, name_size);
+            memcpy(name_list + index * name_size, file_info.name, (size_t)name_size);
             index++;
         } while ((_findnext(hFile, &file_info) == 0) && (index < name_max_count));
     };
@@ -75,7 +76,7 @@ int list_matched_filename_app(const char* folder, const char* pattern, char* nam
     return index;
 }
 
-int print_matched_filename_app(const char* folder, const char* pattern)
+int UTILSAPI print_matched_filename_app(const char* folder, const char* pattern)
 {
     struct _finddata_t file_info;
     intptr_t hFile;
@@ -109,7 +110,7 @@ int print_matched_filename_app(const char* folder, const char* pattern)
     return index;
 }
 
-int auto_list_filename_app(const char* folder, const char* pattern, char** name_list, int name_size, int* name_count)
+int UTILSAPI auto_list_filename_app(const char* folder, const char* pattern, char** name_list, int16_t name_size, int* name_count)
 {
     *name_count = count_filename_app(folder, pattern);
      if (*name_count < 0)
@@ -117,20 +118,20 @@ int auto_list_filename_app(const char* folder, const char* pattern, char** name_
         *name_count = 0;//保证为非负数
         return -1;//返回异常值
      }
-     *name_list = (char*)malloc(*name_count * name_size);
+     *name_list = (char*)malloc((size_t)(*name_count * name_size));
      return list_matched_filename_app(folder, pattern, *name_list, name_size, *name_count);
 }
 
-int save_gray_bmp_app(const char* folder, const char* pre_name, unsigned char* rowdata, size_t width, size_t  height)
+int UTILSAPI save_gray_bmp_app(const char* folder, const char* pre_name, unsigned char* rowdata, int16_t width, int16_t  height)
 {
-    long img_head = 1078;
+    int img_head = 1078;
     char app_path[FILENAME_MAX];
     char full_path[FILENAME_MAX];
     get_app_path(app_path);
     //printf("%s\n", app_path);
     creat_dir_in_app(folder);//保证有这个文件夹
     int num = count_filename_app(folder, "*.bmp");
-    unsigned char* des_data = (unsigned char*)malloc(sizeof(unsigned char) * (width * height + img_head));
+    unsigned char* des_data = (unsigned char*)malloc(sizeof(unsigned char) * (size_t)(width * height + img_head));
 
     add8GreyBmpHead(rowdata, width, height, des_data);//这里可以改进为直接往文件写数据
 
@@ -143,13 +144,13 @@ int save_gray_bmp_app(const char* folder, const char* pre_name, unsigned char* r
         //printf("%s\n", full_path);
     }
 
-    write_data_hex(des_data, width * height + img_head, full_path);
+    write_data_hex(des_data, (size_t)(width * height + img_head), full_path);
 
     free(des_data);
     return 0;
 }
 
-int count_filename_app(const char* folder, const char* pattern)
+int UTILSAPI count_filename_app(const char* folder, const char* pattern)
 {
     struct _finddata_t file_info;
     intptr_t hFile;
@@ -178,7 +179,7 @@ int count_filename_app(const char* folder, const char* pattern)
     return count;
 }
 
-int get_app_path(char* app_path)
+int UTILSAPI get_app_path(char* app_path)
 {
     if (GetModuleFileNameA(NULL, app_path, FILENAME_MAX) < 0)
     {
@@ -188,7 +189,7 @@ int get_app_path(char* app_path)
     return 0;
 }
 
-int creat_dir_in_app(const char* filename)
+int UTILSAPI creat_dir_in_app(const char* filename)
 {
     char path[FILENAME_MAX];
     get_app_path(path);
@@ -198,9 +199,9 @@ int creat_dir_in_app(const char* filename)
     return 0;
 }
 
-void mkdirs(const char* fullpath)
+void UTILSAPI mkdirs(const char* fullpath)
 {
-    int i, len;
+    size_t i,len;
     char str[FILENAME_MAX] = { 0 };
     strncpy_s(str, fullpath, FILENAME_MAX);
 
@@ -232,9 +233,9 @@ void mkdirs(const char* fullpath)
 
 
 
-int add8GreyBmpHead(BYTE* pixData, size_t width, size_t height, BYTE* desData)
+int UTILSAPI add8GreyBmpHead(BYTE* pixData, int16_t width, int16_t height, BYTE* desData)
 {
-    BYTE bitCount = 8, color = 128;
+    UINT32 bitCount = 8, color = 128;
 
     BMPFILETYPE bft;
     BMPFILEHEAD bfh;
@@ -297,7 +298,7 @@ int add8GreyBmpHead(BYTE* pixData, size_t width, size_t height, BYTE* desData)
     return 0;
 }
 
-int add8GreyBmpHead2File(BYTE* pixData, size_t width, size_t height, const char* desFile)
+int UTILSAPI add8GreyBmpHead2File(BYTE* pixData, int width, int height, const char* desFile)
 {
     BYTE bitCount = 8, color = 128;
 
@@ -361,11 +362,14 @@ int add8GreyBmpHead2File(BYTE* pixData, size_t width, size_t height, const char*
     
 }
 //给24位的灰度图加头//该函数未经过测试
-int add24GreyBmpHead2File(BYTE* pixData, size_t width, size_t height, const char* desFile)
+int UTILSAPI add24GreyBmpHead2File(BYTE* pixData, int16_t width, int16_t height, const char* desFile)
 {
     FILE* out;
     fopen_s(&out, desFile, "w+b");
-
+    if (out == NULL)
+    {
+        return -1;
+    }
     int m_nBitCount = 24;
     LONG m_nHeight = height;
     LONG m_nWidth = width;
@@ -404,12 +408,12 @@ int add24GreyBmpHead2File(BYTE* pixData, size_t width, size_t height, const char
     LONG imageHeight -源图像的高度(像素数)
     )
 ******************************************************************************/
-bool Bitmap8To24(BYTE* srcImage, BYTE* dstImage, LONG imageWidth, LONG imageHeight);
+bool UTILSAPI Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT imageHeight);
 
-bool Bitmap8To24(BYTE* srcImage, BYTE* dstImage, LONG imageWidth, LONG imageHeight)
+bool UTILSAPI Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT imageHeight)
 {
-    LONG lLineBytes24 = ((imageWidth * 24 + 31) / 32 * 4);
-    LONG lLineBytes8 = ((imageWidth * 8 + 31) / 32 * 4);
+    INT lLineBytes24 = ((imageWidth * 24 + 31) / 32 * 4);
+    INT lLineBytes8 = ((imageWidth * 8 + 31) / 32 * 4);
     int n, j;
     for (int i = 0; i < imageHeight; i++)
     {

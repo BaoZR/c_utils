@@ -7,6 +7,9 @@
 #include "../include/utils.h"
 
 #include "../include/svpng.inc"
+
+
+
 #ifdef WIN64
     #ifdef _DEBUG
         #pragma comment(lib,"../x64/Debug/utils.lib")   
@@ -15,47 +18,32 @@
         #pragma comment(lib,"../x64/Release/utils.lib")
     #endif
 #else
-#ifndef WIN64
-    
     #ifdef _DEBUG
         #pragma comment(lib,"../x86/Debug/utils.lib")
     #endif
     #ifdef NDEBUG
-    #pragma comment(lib,"../x86/Release/utils.lib")
+        #pragma comment(lib,"../x86/Release/utils.lib")
     #endif
 #endif
-#endif
 
 
 
 
-//int auto_list_filename_app(const char* folder, const char* pattern, char** name_list,int name_size,int* name_count);
+
+
 
 int test(char** foo);
 
 int main()
 {
-    //std::cout << "Hello World!\n";
-    // char app_path[FILENAME_MAX];
-    //get_app_path(app_path);
-    //printf("%s\n", app_path);
-    //unsigned char* buffer = (unsigned char*)malloc(sizeof(BYTE) * 500 * 200);
-    //read_data_hex(buffer, 500 * 200, "raw.data");
-    //save_gray_bmp_app("222\\222", NULL, buffer, 500, 200);
-    //save_gray_bmp_app("333", "fff", buffer, 500, 200);
-    
-    //print_matched_filename_app(NULL,"*");
+    srand((int)time(NULL));
+    BYTE* buff = (BYTE*)malloc(500 * 200);
 
-    //char* namelist = nullptr;
-    //
-    //int name_count = 0;
-    //auto_list_filename_app("333", "*.bmp", &namelist,FILENAME_MAX,&name_count);
-    //std::unique_ptr<char> p(namelist);
-    //for (int i = 0; i < name_count; i++) {
-    //    printf_s("NO.%d %s\n", i, namelist + i * FILENAME_MAX);
-    //}
-    BYTE* buff = (BYTE*)malloc(100000);
-    read_data_hex(buff, 100000, "../raw.data");
+    for (int i = 0; i < 500 * 200; i++) {
+        int t = rand() % 256;
+        char c = t;
+        memcpy_s(buff + i, 1, &c, 1);
+    }
     save_gray_bmp_app("picture", NULL, buff, 500, 200);
     //FILE* fp = fopen("rgb.png", "wb+");
     //svpng(fp, 500, 200, buff, 0);
@@ -63,6 +51,7 @@ int main()
     //char* g = nullptr;
     //test(&g);
     //std::unique_ptr<char> p(g);
+    return 0;
 }
 
 //int auto_list_filename_app(const char* folder, const char* pattern, char** name_list, int name_size,int* name_count)
