@@ -146,7 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="utils_test.cpp" />
+    <ClCompile Include="utils_test.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\utils\svpng.inc" />

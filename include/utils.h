@@ -2,9 +2,13 @@
 
 #include <direct.h>
 #include <corecrt_io.h>
-#include <iostream>
 #include <Windows.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <malloc.h>
 
+
+#define DLL_EXPORT
 
 
 #ifdef DLL_EXPORT

@@ -7,6 +7,7 @@
 #include "../include/utils.h"
 
 #include "../include/svpng.inc"
+#include <time.h>
 
 
 

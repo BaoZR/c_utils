@@ -1,7 +1,7 @@
 ﻿// utils.cpp : 定义静态库的函数。
 //
 
-#include "pch.h"
+
 #include "framework.h"
 #define UTILSAPI_EXPORTS
 #include "../include/utils.h"
@@ -55,9 +55,9 @@ int UTILSAPI list_matched_filename_app(const char* folder, const char* pattern, 
     strrchr(app_path, '\\')[1] = 0;
 
     if (folder != NULL) {
-        sprintf_s(temp_path, "%s%s\\%s", app_path, folder, pattern);
+        sprintf_s(temp_path, FILENAME_MAX,"%s%s\\%s", app_path, folder, pattern);
     }else{
-         sprintf_s(temp_path, "%s%s", app_path, pattern);
+         sprintf_s(temp_path, FILENAME_MAX, "%s%s", app_path, pattern);
     }
 
 
@@ -88,10 +88,10 @@ int UTILSAPI print_matched_filename_app(const char* folder, const char* pattern)
     strrchr(app_path, '\\')[1] = 0;
 
     if (folder != NULL) {
-        sprintf_s(temp_path, "%s%s\\%s", app_path, folder, pattern);
+        sprintf_s(temp_path, FILENAME_MAX,"%s%s\\%s", app_path, folder, pattern);
     }
     else {
-        sprintf_s(temp_path, "%s%s", app_path, pattern);
+        sprintf_s(temp_path, FILENAME_MAX, "%s%s", app_path, pattern);
     }
 
     //printf("%s\n", temp_path);
@@ -136,11 +136,11 @@ int UTILSAPI save_gray_bmp_app(const char* folder, const char* pre_name, unsigne
     add8GreyBmpHead(rowdata, width, height, des_data);//这里可以改进为直接往文件写数据
 
     if (pre_name == NULL) {//如果没有指定用户名则按1、2、3这样的方式命名
-        sprintf_s(full_path, "%s%s\\%d.bmp", app_path, folder, num + 1);
+        sprintf_s(full_path, FILENAME_MAX,"%s%s\\%d.bmp", app_path, folder, num + 1);
         //printf("%s\n", full_path);
     }
     else {
-        sprintf_s(full_path, "%s%s\\%s.bmp", app_path, folder, pre_name);
+        sprintf_s(full_path, FILENAME_MAX, "%s%s\\%s.bmp", app_path, folder, pre_name);
         //printf("%s\n", full_path);
     }
 
@@ -164,7 +164,7 @@ int UTILSAPI count_filename_app(const char* folder, const char* pattern)
     }
     strrchr(app_path, '\\')[1] = 0;
 
-    sprintf_s(temp_path, "%s%s\\%s", app_path, folder, pattern);
+    sprintf_s(temp_path, FILENAME_MAX, "%s%s\\%s", app_path, folder, pattern);
 
     if ((hFile = _findfirst(temp_path, &file_info)) == -1L) {
         //printf("NO files in directory!\n");
@@ -193,7 +193,7 @@ int UTILSAPI creat_dir_in_app(const char* filename)
 {
     char path[FILENAME_MAX];
     get_app_path(path);
-    sprintf_s(path, "%s%s", path, filename);
+    sprintf_s(path, FILENAME_MAX,"%s%s", path, filename);
     //printf("%s\n", path);
     mkdirs(path);
     return 0;
@@ -203,7 +203,7 @@ void UTILSAPI mkdirs(const char* fullpath)
 {
     size_t i,len;
     char str[FILENAME_MAX] = { 0 };
-    strncpy_s(str, fullpath, FILENAME_MAX);
+    strncpy_s(str, FILENAME_MAX, fullpath, FILENAME_MAX);
 
     len = strlen(str);
     int j = 0;
@@ -401,16 +401,16 @@ int UTILSAPI add24GreyBmpHead2File(BYTE* pixData, int16_t width, int16_t height,
 /******************************************************************************
 *函数功能：将8位位图转换为24位位图 该函数未经过测试
 *函数声明：
-   BOOL Bitmap8To24(
+   int Bitmap8To24(
     BYTE* srcImage,  -指向源图像的像素数据的指针
     BYTE* dstImage,  -指向目的图像的像素数据的指针
     LONG imageWidth, -源图像的宽度(像素数)
     LONG imageHeight -源图像的高度(像素数)
     )
 ******************************************************************************/
-bool UTILSAPI Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT imageHeight);
+int  Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT imageHeight);
 
-bool UTILSAPI Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT imageHeight)
+int  Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT imageHeight)
 {
     INT lLineBytes24 = ((imageWidth * 24 + 31) / 32 * 4);
     INT lLineBytes8 = ((imageWidth * 8 + 31) / 32 * 4);
@@ -428,5 +428,5 @@ bool UTILSAPI Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT im
         }
     }
 
-    return true;
+    return 0;
 }
