@@ -5,8 +5,8 @@
 # 函数介绍：
 函数名     | 介绍
 -------- | -----
-size_t write_data_hex| 向文件写指定大小的数据
-size_t read_data_hex|  从文件读指定大小的数据
+write_data_hex| 向文件写指定大小的数据
+read_data_hex|  从文件读指定大小的数据
 list_matched_filename_app  | 枚举相对app路径下匹配到的文件名
  print_matched_filename_app | 打印相对app路径下匹配到的文件名
 auto_list_filename_app  |  一个相对自动化的函数，可以枚举相对app路径下匹配到的文件名,要记得释放name_list中分配的内存
