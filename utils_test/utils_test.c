@@ -3,11 +3,12 @@
 #ifdef _DEBUG
 #include <vld.h>
 #endif
-
+#define UTILS_DLL_EXPORT
 #include "../include/utils.h"
 
 #include "../include/svpng.inc"
 #include <time.h>
+
 
 
 
@@ -52,6 +53,15 @@ int main()
     //char* g = nullptr;
     //test(&g);
     //std::unique_ptr<char> p(g);
+    char app_path[FILENAME_MAX] = { 0 };
+    size_t buff_len;
+    unsigned char* buf = NULL;
+    get_app_path(app_path);
+    strcat_s(app_path, FILENAME_MAX, "utils.dll");
+    load_file(app_path, &buf, &buff_len);
+    strcat_s(app_path, FILENAME_MAX, "2");
+    write_data_hex(buf, buff_len, app_path);
+    free(buf);
     return 0;
 }
 

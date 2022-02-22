@@ -8,7 +8,7 @@
 
 
 
-size_t UTILSAPI write_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFileNm)
+size_t UTILSAPI write_data_hex(IN unsigned char* pucBuff, IN size_t uiBuffSize, IN const char* pcFileNm)
 {
     FILE* fp;
     fopen_s(&fp, pcFileNm, "wb+");
@@ -29,7 +29,7 @@ size_t UTILSAPI write_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const c
     return iRet;
 }
 
-size_t UTILSAPI read_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const char* pcFileNm)
+size_t UTILSAPI read_data_hex(INOUT unsigned char* pucBuff,IN size_t uiBuffSize,IN const char* pcFileNm)
 {
     FILE* fp;;
     fopen_s(&fp, pcFileNm, "rb");
@@ -43,7 +43,7 @@ size_t UTILSAPI read_data_hex(unsigned char* pucBuff, size_t uiBuffSize,const ch
     return iRet;
 }
 
-int UTILSAPI list_matched_filename_app(const char* folder, const char* pattern, char* name_list, int name_size, int name_max_count)
+int UTILSAPI list_matched_filename_app(IN const char* folder,IN const char* pattern,INOUT char* name_list,IN int name_size,IN int name_max_count)
 {
     struct _finddata_t file_info;
     intptr_t hFile;
@@ -76,7 +76,7 @@ int UTILSAPI list_matched_filename_app(const char* folder, const char* pattern, 
     return index;
 }
 
-int UTILSAPI print_matched_filename_app(const char* folder, const char* pattern)
+int UTILSAPI print_matched_filename_app(IN const char* folder,IN const char* pattern)
 {
     struct _finddata_t file_info;
     intptr_t hFile;
@@ -110,7 +110,7 @@ int UTILSAPI print_matched_filename_app(const char* folder, const char* pattern)
     return index;
 }
 
-int UTILSAPI auto_list_filename_app(const char* folder, const char* pattern, char** name_list, int16_t name_size, int* name_count)
+int UTILSAPI auto_list_filename_app(IN const char* folder,IN const char* pattern,OUT char** name_list,IN int16_t name_size,OUT int* name_count)
 {
     *name_count = count_filename_app(folder, pattern);
      if (*name_count < 0)
@@ -122,7 +122,7 @@ int UTILSAPI auto_list_filename_app(const char* folder, const char* pattern, cha
      return list_matched_filename_app(folder, pattern, *name_list, name_size, *name_count);
 }
 
-int UTILSAPI save_gray_bmp_app(const char* folder, const char* pre_name, unsigned char* rowdata, int16_t width, int16_t  height)
+int UTILSAPI save_gray_bmp_app(IN const char* folder,IN const char* pre_name,IN unsigned char* rowdata,IN int16_t width,IN int16_t  height)
 {
     int img_head = 1078;
     char app_path[FILENAME_MAX];
@@ -150,7 +150,7 @@ int UTILSAPI save_gray_bmp_app(const char* folder, const char* pre_name, unsigne
     return 0;
 }
 
-int UTILSAPI count_filename_app(const char* folder, const char* pattern)
+int UTILSAPI count_filename_app(IN const char* folder,IN const char* pattern)
 {
     struct _finddata_t file_info;
     intptr_t hFile;
@@ -179,7 +179,7 @@ int UTILSAPI count_filename_app(const char* folder, const char* pattern)
     return count;
 }
 
-int UTILSAPI get_app_path(char* app_path)
+int UTILSAPI get_app_path(INOUT char* app_path)
 {
     if (GetModuleFileNameA(NULL, app_path, FILENAME_MAX) < 0)
     {
@@ -189,17 +189,70 @@ int UTILSAPI get_app_path(char* app_path)
     return 0;
 }
 
-int UTILSAPI creat_dir_in_app(const char* filename)
+int UTILSAPI load_file(IN const char* file_path, OUT unsigned char** buff, OUT size_t* file_len)
 {
-    char path[FILENAME_MAX];
-    get_app_path(path);
-    sprintf_s(path, FILENAME_MAX,"%s%s", path, filename);
-    //printf("%s\n", path);
-    mkdirs(path);
+    FILE* pFile;
+    long lSize;
+    size_t result;
+    errno_t ret;
+    /* 若要一个byte不漏地读入整个文件，只能采用二进制方式打开 */
+    ret = fopen_s(&pFile, file_path, "rb");
+    if (ret < 0 || pFile == 0)
+    {
+        fputs("File error", stderr);
+        return ret;
+    }
+
+    /* 获取文件大小 */
+    fseek(pFile, 0, SEEK_END);
+    lSize = ftell(pFile);
+    *file_len = lSize;
+
+
+    rewind(pFile);
+
+    /* 分配能够存储整个文件的内存大小 */
+    *buff = (unsigned char*)malloc(sizeof(char) * lSize);
+    if (*buff == NULL)
+    {
+        fputs("Memory error", stderr);
+        fclose(pFile);
+        return -1;
+    }
+    memset(*buff, 0, sizeof(char) * lSize);
+
+    /* 将文件拷贝到buffer中 */
+    result = fread(*buff, 1, sizeof(char) * lSize, pFile);
+    if (result != lSize)
+    {
+        fputs("Reading error", stderr);
+        free(*buff);
+        fclose(pFile);
+        return -1;
+    }
+    /* 现在整个文件已经在buffer中 */
+
+    fclose(pFile);
+
     return 0;
 }
 
-void UTILSAPI mkdirs(const char* fullpath)
+
+
+int UTILSAPI creat_dir_in_app(IN const char* filename)
+{
+    int ret = 0;
+    char path[FILENAME_MAX];
+    ret =  get_app_path(path);
+    if (ret < 0) return -1;//发生错误直接返回
+
+    sprintf_s(path, FILENAME_MAX,"%s%s", path, filename);
+    //printf("%s\n", path);
+    ret = mkdirs(path);
+    return ret;
+}
+
+int UTILSAPI mkdirs(IN const char* fullpath)
 {
     size_t i,len;
     char str[FILENAME_MAX] = { 0 };
@@ -215,7 +268,8 @@ void UTILSAPI mkdirs(const char* fullpath)
                 //printf("创建第%d级别目录 p=[%s]\n", j, str);
                 if (_mkdir(str) < 0) {
                     printf("mkdir fail\n");
-                    return;
+
+                    return -1;
                 }
             }
             str[i] = '\\';
@@ -226,14 +280,15 @@ void UTILSAPI mkdirs(const char* fullpath)
         //printf("最后一级目录=%s\n", str);
         if (_mkdir(str) < 0) {
             printf("mkdir fail\n");
+           return -1;
         }
     }
-    return;
+    return 0;
 }
 
 
 
-int UTILSAPI add8GreyBmpHead(BYTE* pixData, int16_t width, int16_t height, BYTE* desData)
+int UTILSAPI add8GreyBmpHead(IN BYTE* pixData,IN int16_t width,IN int16_t height,INOUT BYTE* desData)
 {
     UINT32 bitCount = 8, color = 128;
 
@@ -298,7 +353,7 @@ int UTILSAPI add8GreyBmpHead(BYTE* pixData, int16_t width, int16_t height, BYTE*
     return 0;
 }
 
-int UTILSAPI add8GreyBmpHead2File(BYTE* pixData, int width, int height, const char* desFile)
+int UTILSAPI add8GreyBmpHead2File(IN BYTE* pixData,IN int width,IN int height,IN const char* desFile)
 {
     BYTE bitCount = 8, color = 128;
 
