@@ -8,7 +8,7 @@
 
 
 
-size_t UTILSAPI write_data_hex(IN unsigned char* pucBuff, IN size_t uiBuffSize, IN const char* pcFileNm)
+size_t UTILSAPI write_data_hex(unsigned char* pucBuff, size_t uiBuffSize, const char* pcFileNm)
 {
     FILE* fp;
     fopen_s(&fp, pcFileNm, "wb+");
@@ -29,7 +29,7 @@ size_t UTILSAPI write_data_hex(IN unsigned char* pucBuff, IN size_t uiBuffSize, 
     return iRet;
 }
 
-size_t UTILSAPI read_data_hex(INOUT unsigned char* pucBuff,IN size_t uiBuffSize,IN const char* pcFileNm)
+size_t UTILSAPI read_data_hex(unsigned char* pucBuff,size_t uiBuffSize,const char* pcFileNm)
 {
     FILE* fp;;
     fopen_s(&fp, pcFileNm, "rb");
@@ -43,7 +43,7 @@ size_t UTILSAPI read_data_hex(INOUT unsigned char* pucBuff,IN size_t uiBuffSize,
     return iRet;
 }
 
-int UTILSAPI list_matched_filename_app(IN const char* folder,IN const char* pattern,INOUT char* name_list,IN int name_size,IN int name_max_count)
+int UTILSAPI list_matched_filename_app(const char* folder,const char* pattern,char* name_list,int name_size,int name_max_count)
 {
     struct _finddata_t file_info;
     intptr_t hFile;
@@ -76,7 +76,7 @@ int UTILSAPI list_matched_filename_app(IN const char* folder,IN const char* patt
     return index;
 }
 
-int UTILSAPI print_matched_filename_app(IN const char* folder,IN const char* pattern)
+int UTILSAPI print_matched_filename_app(const char* folder,const char* pattern)
 {
     struct _finddata_t file_info;
     intptr_t hFile;
@@ -110,7 +110,7 @@ int UTILSAPI print_matched_filename_app(IN const char* folder,IN const char* pat
     return index;
 }
 
-int UTILSAPI auto_list_filename_app(IN const char* folder,IN const char* pattern,OUT char** name_list,IN int16_t name_size,OUT int* name_count)
+int UTILSAPI auto_list_filename_app(const char* folder,const char* pattern,char** name_list,int16_t name_size,int* name_count)
 {
     *name_count = count_filename_app(folder, pattern);
      if (*name_count < 0)
@@ -119,10 +119,11 @@ int UTILSAPI auto_list_filename_app(IN const char* folder,IN const char* pattern
         return -1;//返回异常值
      }
      *name_list = (char*)malloc((size_t)(*name_count * name_size));
+     memset(*name_list,0, *name_count * name_size);
      return list_matched_filename_app(folder, pattern, *name_list, name_size, *name_count);
 }
 
-int UTILSAPI save_gray_bmp_app(IN const char* folder,IN const char* pre_name,IN unsigned char* rowdata,IN int16_t width,IN int16_t  height)
+int UTILSAPI save_gray_bmp_app(const char* folder,const char* pre_name,unsigned char* rowdata,int16_t width,int16_t  height)
 {
     int img_head = 1078;
     char app_path[FILENAME_MAX];
@@ -150,7 +151,7 @@ int UTILSAPI save_gray_bmp_app(IN const char* folder,IN const char* pre_name,IN 
     return 0;
 }
 
-int UTILSAPI count_filename_app(IN const char* folder,IN const char* pattern)
+int UTILSAPI count_filename_app(const char* folder,const char* pattern)
 {
     struct _finddata_t file_info;
     intptr_t hFile;
@@ -179,7 +180,7 @@ int UTILSAPI count_filename_app(IN const char* folder,IN const char* pattern)
     return count;
 }
 
-int UTILSAPI get_app_path(INOUT char* app_path)
+int UTILSAPI get_app_path(char* app_path)
 {
     if (GetModuleFileNameA(NULL, app_path, FILENAME_MAX) < 0)
     {
@@ -189,7 +190,7 @@ int UTILSAPI get_app_path(INOUT char* app_path)
     return 0;
 }
 
-int UTILSAPI load_file(IN const char* file_path, OUT unsigned char** buff, OUT size_t* file_len)
+int UTILSAPI load_file(const char* file_path, unsigned char** buff, size_t* file_len)
 {
     FILE* pFile;
     long lSize;
@@ -239,7 +240,7 @@ int UTILSAPI load_file(IN const char* file_path, OUT unsigned char** buff, OUT s
 
 
 
-int UTILSAPI creat_dir_in_app(IN const char* filename)
+int UTILSAPI creat_dir_in_app(const char* filename)
 {
     int ret = 0;
     char path[FILENAME_MAX];
@@ -252,7 +253,7 @@ int UTILSAPI creat_dir_in_app(IN const char* filename)
     return ret;
 }
 
-int UTILSAPI mkdirs(IN const char* fullpath)
+int UTILSAPI mkdirs(const char* fullpath)
 {
     size_t i,len;
     char str[FILENAME_MAX] = { 0 };
@@ -288,7 +289,7 @@ int UTILSAPI mkdirs(IN const char* fullpath)
 
 
 
-int UTILSAPI add8GreyBmpHead(IN BYTE* pixData,IN int16_t width,IN int16_t height,INOUT BYTE* desData)
+int UTILSAPI add8GreyBmpHead(BYTE* pixData,int16_t width,int16_t height,BYTE* desData)
 {
     UINT32 bitCount = 8, color = 128;
 
@@ -353,7 +354,7 @@ int UTILSAPI add8GreyBmpHead(IN BYTE* pixData,IN int16_t width,IN int16_t height
     return 0;
 }
 
-int UTILSAPI add8GreyBmpHead2File(IN BYTE* pixData,IN int width,IN int height,IN const char* desFile)
+int UTILSAPI add8GreyBmpHead2File(BYTE* pixData,int width,int height,const char* desFile)
 {
     BYTE bitCount = 8, color = 128;
 
