@@ -8,14 +8,14 @@
 
 #include "../include/svpng.inc"
 #include <time.h>
-
-
-
-
+#include <string>
+#include <Windows.h>
+#include <memory>
 #ifdef WIN64
     #ifdef _DEBUG
         #pragma comment(lib,"../x64/Debug/utils.lib")   
     #endif
+
     #ifdef NDEBUG
         #pragma comment(lib,"../x64/Release/utils.lib")
     #endif
@@ -50,18 +50,13 @@ int main()
     //FILE* fp = fopen("rgb.png", "wb+");
     //svpng(fp, 500, 200, buff, 0);
     free(buff);
-    //char* g = nullptr;
-    //test(&g);
-    //std::unique_ptr<char> p(g);
-    char app_path[FILENAME_MAX] = { 0 };
-    size_t buff_len;
-    unsigned char* buf = NULL;
-    get_app_path(app_path);
-    strcat_s(app_path, FILENAME_MAX, "utils.dll");
-    load_file(app_path, &buf, &buff_len);
-    strcat_s(app_path, FILENAME_MAX, "2");
-    write_data_hex(buf, buff_len, app_path);
-    free(buf);
+    
+    char* namelist = NULL;
+    int name_count;
+    int ret = auto_list_filename_app("picture", "*.bmp", &namelist, FILENAME_MAX, &name_count);
+    std::unique_ptr<char> p2(namelist);
+    printf("list result %d\n", ret);
+
     return 0;
 }
 
