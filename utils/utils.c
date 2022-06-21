@@ -288,6 +288,24 @@ int UTILSAPI mkdirs(const char* fullpath)
 }
 
 
+void grey_image_rotate_90_degree(unsigned char* psrc, unsigned char* pdst, int* col /*w*/, int* row /*h*/)
+{
+    int r, c;
+    int col_temp = *col;
+    int row_temp = *row;
+    int cxrow_temp;
+
+    for (c = 0; c < col_temp; c++) {
+        cxrow_temp = c * row_temp;
+        for (r = 0; r < row_temp; r++) {
+            pdst[cxrow_temp + (row_temp - r - 1)] = psrc[r * col_temp + c];
+        }
+    }
+
+    *row = *col;
+    *col = row_temp;
+}
+
 
 int UTILSAPI add8GreyBmpHead(BYTE* pixData,int16_t width,int16_t height,BYTE* desData)
 {
