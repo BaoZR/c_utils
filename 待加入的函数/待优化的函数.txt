@@ -195,4 +195,40 @@ int main() {
     return true;
 }
 
+//网上找的函数
+std::string GBKToUTF8(const std::string& strGBK)
+{
+    std::string strOutUTF8 = "";
+    WCHAR* str1;//用来放gbk
+    int n = MultiByteToWideChar(CP_ACP, 0, strGBK.c_str(), -1, NULL, 0);
+    str1 = new WCHAR[n];
+    MultiByteToWideChar(CP_ACP, 0, strGBK.c_str(), -1, str1, n);//放宽字符的gbk，难道只有放到宽字符中才能转换吗 //好像是的
+    n = WideCharToMultiByte(CP_UTF8, 0, str1, -1, NULL, 0, NULL, NULL);
+    char* str2 = new char[n];//用来放utf8
+    WideCharToMultiByte(CP_UTF8, 0, str1, -1, str2, n, NULL, NULL);//不知为何放在多字节的utf8中
+    strOutUTF8 = str2;//char直接赋值给String
+    delete[]str1;
+    str1 = NULL;
+    delete[]str2;
+    str2 = NULL;
+    return strOutUTF8;
+}
+//自己写的
+std::string UTF8ToGBK(const std::string&strUTF8) {
+    std::string strOutGBK = "";
+    WCHAR* wstr;
+    int n = MultiByteToWideChar(CP_UTF8, 0, strUTF8.c_str(), -1, NULL, 0);
+    wstr = new WCHAR[n];
+    MultiByteToWideChar(CP_UTF8, 0, strUTF8.c_str(), -1, wstr, n);
+
+    n = WideCharToMultiByte(CP_ACP, 0, wstr, -1, NULL, 0, NULL, NULL);
+    char* str = new char[n];
+    WideCharToMultiByte(CP_ACP, 0, wstr, -1, str, n, NULL, NULL);
+    strOutGBK = str;
+    delete[] wstr;
+    wstr = NULL;
+    delete[] str;
+    str = NULL;
+    return strOutGBK;
+}
 
