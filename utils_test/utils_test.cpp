@@ -36,8 +36,26 @@ int test(char** foo);
 
 int main()
 {
+    std::unique_ptr<uint8_t[]> arr = std::unique_ptr<uint8_t[]>(new uint8_t[640 * 480]);
+    //这是一个四个区块的黑白棋盘，左上角和右下角为白色，右上角和左下角为灰色
+    memset(arr.get(), 255, 640 * 480);
+    
+    for (int row = 0; row < 480; row++) {
+        for (int col = 0; col < 640; col++) {
+            //注意到bmp是反过来读的
+            if ((row <= 239 && col <= 319) || (row >= 240 && col >= 320) ){
+                arr.get()[row * 640 + col] = 128;
+            }
+        }
+    }
 
-    save_gray_bmp_app("picture", NULL, arr, 640, 480);
+
+
+    
+    save_gray_bmp_app("picture", NULL, arr.get(), 640, 480);
+    add8GreyBmpHead2File(arr.get(), 640, 480, "123.bmp");
+
+
     //FILE* fp = fopen("rgb.png", "wb+");
     //svpng(fp, 500, 200, buff, 0);
     

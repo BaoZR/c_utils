@@ -196,7 +196,7 @@ int UTILSAPI load_file(const char* file_path, unsigned char** buff, size_t* file
     long lSize;
     size_t result;
     errno_t ret;
-    /* 若要一个byte不漏地读入整个文件，只能采用二进制方式打开 */
+    /* 若要一个字节不漏地读入整个文件，只能采用二进制方式打开 */
     ret = fopen_s(&pFile, file_path, "rb");
     if (ret < 0 || pFile == 0)
     {
@@ -307,7 +307,7 @@ void grey_image_rotate_90_degree(unsigned char* psrc, unsigned char* pdst, int* 
 }
 
 
-int UTILSAPI add8GreyBmpHead(BYTE* pixData,int16_t width,int16_t height,BYTE* desData)
+int UTILSAPI add8GreyBmpHead(uint8_t* pixData,int width,int height,uint8_t* desData)
 {
     UINT32 bitCount = 8, color = 128;
 
@@ -315,7 +315,7 @@ int UTILSAPI add8GreyBmpHead(BYTE* pixData,int16_t width,int16_t height,BYTE* de
     MY_BMPFILEHEAD bfh;
     MY_BMPINFOHEAD bih;
     RGBQUAD_s rgbquad[256];
-    DWORD LineByte, ImgSize;
+    int LineByte, ImgSize;
     LineByte = WIDTHBYTES(width * bitCount); //计算位图一行的实际宽度并确保它为32的倍数
     ImgSize = height * LineByte;             //图片像素大小
 
@@ -324,19 +324,19 @@ int UTILSAPI add8GreyBmpHead(BYTE* pixData,int16_t width,int16_t height,BYTE* de
 
     for (int p = 0; p < 256; p++)
     {
-        rgbquad[p].rgbBlue = (BYTE)p;
-        rgbquad[p].rgbGreen = (BYTE)p;
-        rgbquad[p].rgbRed = (BYTE)p;
-        rgbquad[p].rgbReserved = (BYTE)0;
+        rgbquad[p].rgbBlue = (uint8_t)p;
+        rgbquad[p].rgbGreen = (uint8_t)p;
+        rgbquad[p].rgbRed = (uint8_t)p;
+        rgbquad[p].rgbReserved = (uint8_t)0;
     }
     //bmp file's type
     bft.bfType = 0x4d42;
 
     //bmp fileheader's info
-    bfh.bfSize = (DWORD)(54 + 4 * 256 + ImgSize);
+    bfh.bfSize = (uint32_t)(54 + 4 * 256 + ImgSize);
     bfh.bfReserved1 = 0;
     bfh.bfReserved2 = 0;
-    bfh.bfOffBits = (DWORD)(54 + 4 * 256);
+    bfh.bfOffBits = (uint32_t)(54 + 4 * 256);
 
     //bmp file's infoheader
     bih.biSize = 40; //本位图信息头的长度，为40字节
@@ -365,41 +365,45 @@ int UTILSAPI add8GreyBmpHead(BYTE* pixData,int16_t width,int16_t height,BYTE* de
         //write bmp file's RGBQUAD data
         memcpy_s(desData, sizeof(rgbquad), &rgbquad, sizeof(rgbquad));
         desData += sizeof(rgbquad);
-        //writing pix data to file
-        memcpy_s(desData, width * height, pixData, width * height);
+        //writing pix data to memory
+        for (int row = 0; row < height; ++row) {
+
+            memcpy_s(&desData[row * width], width, &pixData[(height - 1 - row) *width] , width);
+        }
+
     }
 
     return 0;
 }
 
-int UTILSAPI add8GreyBmpHead2File(BYTE* pixData,int width,int height,const char* desFile)
+int UTILSAPI add8GreyBmpHead2File(uint8_t* pixData,int width,int height,const char* desFile)
 {
-    BYTE bitCount = 8, color = 128;
+    uint8_t bitCount = 8, color = 128;
 
     FILE* out;
     MY_BMPFILETYPE bft;
     MY_BMPFILEHEAD bfh;
     MY_BMPINFOHEAD bih;
     RGBQUAD rgbquad[256];
-    DWORD LineByte, ImgSize;
+    int LineByte, ImgSize;
     LineByte = WIDTHBYTES(width * bitCount); //计算位图一行的实际宽度并确保它为32的倍数
     ImgSize = height * LineByte;             //图片像素大小
 
     for (int p = 0; p < 256; p++)
     {
-        rgbquad[p].rgbBlue = (BYTE)p;
-        rgbquad[p].rgbGreen = (BYTE)p;
-        rgbquad[p].rgbRed = (BYTE)p;
-        rgbquad[p].rgbReserved = (BYTE)0;
+        rgbquad[p].rgbBlue = (uint8_t)p;
+        rgbquad[p].rgbGreen = (uint8_t)p;
+        rgbquad[p].rgbRed = (uint8_t)p;
+        rgbquad[p].rgbReserved = (uint8_t)0;
     }
     //bmp file's type
     bft.bfType = 0x4d42;
 
     //bmp fileheader's info
-    bfh.bfSize = (DWORD)(54 + 4 * 256 + ImgSize);
+    bfh.bfSize = (uint32_t)(54 + 4 * 256 + ImgSize);
     bfh.bfReserved1 = 0;
     bfh.bfReserved2 = 0;
-    bfh.bfOffBits = (DWORD)(54 + 4 * 256);
+    bfh.bfOffBits = (uint32_t)(54 + 4 * 256);
 
     //bmp file's infoheader
     bih.biSize = 40; //本位图信息头的长度，为40字节
@@ -426,7 +430,10 @@ int UTILSAPI add8GreyBmpHead2File(BYTE* pixData,int width,int height,const char*
         //write bmp file's RGBQUAD data
         fwrite(&rgbquad, sizeof(RGBQUAD), sizeof(rgbquad) / sizeof(RGBQUAD), out);
         //writing pix data to file
-        fwrite(pixData, sizeof(BYTE), ImgSize, out);
+        for (int row = height - 1; row >= 0; row--) {
+            fwrite(&pixData[row * height], width, sizeof(uint8_t), out);
+        }
+
     }
     if (out)
         fclose(out);
@@ -436,7 +443,7 @@ int UTILSAPI add8GreyBmpHead2File(BYTE* pixData,int width,int height,const char*
     
 }
 //给24位的灰度图加头//该函数未经过测试
-int UTILSAPI add24GreyBmpHead2File(BYTE* pixData, int16_t width, int16_t height, const char* desFile)
+int UTILSAPI add24GreyBmpHead2File(uint8_t* pixData, int width, int height, const char* desFile)
 {
     FILE* out;
     fopen_s(&out, desFile, "w+b");
@@ -445,9 +452,9 @@ int UTILSAPI add24GreyBmpHead2File(BYTE* pixData, int16_t width, int16_t height,
         return -1;
     }
     int m_nBitCount = 24;
-    LONG m_nHeight = height;
-    LONG m_nWidth = width;
-    LONG lLineBytes24 = ((m_nWidth * 24 + 31) / 32 * 4);
+    uint32_t m_nHeight = height;
+    uint32_t m_nWidth = width;
+    uint32_t lLineBytes24 = ((m_nWidth * 24 + 31) / 32 * 4);
     
     //建立一个位图文件头变量，并为此变量赋值
     BITMAPFILEHEADER bf;
@@ -461,7 +468,7 @@ int UTILSAPI add24GreyBmpHead2File(BYTE* pixData, int16_t width, int16_t height,
     //即为：文件头+信息头+像素数据
     bf.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + m_nHeight * lLineBytes24;
     //位图文件的类型为BM
-    bf.bfType = ((WORD)'M' << 8 | 'B');
+    bf.bfType = ((uint16_t)'M' << 8 | 'B');
     //将位图文件头写入文件
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, out);
 
@@ -476,24 +483,24 @@ int UTILSAPI add24GreyBmpHead2File(BYTE* pixData, int16_t width, int16_t height,
 *函数功能：将8位位图转换为24位位图 该函数未经过测试
 *函数声明：
    int Bitmap8To24(
-    BYTE* srcImage,  -指向源图像的像素数据的指针
-    BYTE* dstImage,  -指向目的图像的像素数据的指针
-    LONG imageWidth, -源图像的宽度(像素数)
-    LONG imageHeight -源图像的高度(像素数)
+    uint8_t* srcImage,  -指向源图像的像素数据的指针
+    uint8_t* dstImage,  -指向目的图像的像素数据的指针
+    uint32_t imageWidth, -源图像的宽度(像素数)
+    uint32_t imageHeight -源图像的高度(像素数)
     )
 ******************************************************************************/
-int  Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT imageHeight);
+int  Bitmap8To24(uint8_t* srcImage, uint8_t* dstImage, int imageWidth, int imageHeight);
 
-int  Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT imageHeight)
+int  Bitmap8To24(uint8_t* srcImage, uint8_t* dstImage, int imageWidth, int imageHeight)
 {
-    INT lLineBytes24 = ((imageWidth * 24 + 31) / 32 * 4);
-    INT lLineBytes8 = ((imageWidth * 8 + 31) / 32 * 4);
+    int lLineBytes24 = ((imageWidth * 24 + 31) / 32 * 4);
+    int lLineBytes8 = ((imageWidth * 8 + 31) / 32 * 4);
     int n, j;
     for (int i = 0; i < imageHeight; i++)
     {
         for (j = 0, n = 0; j < lLineBytes8; j++, n++)
         {
-            BYTE gray = *(srcImage + lLineBytes8 * i + j);
+            uint8_t gray = *(srcImage + lLineBytes8 * i + j);
             *(dstImage + lLineBytes24 * i + n) = gray;
             n++;
             *(dstImage + lLineBytes24 * i + n) = gray;
@@ -507,7 +514,7 @@ int  Bitmap8To24(BYTE* srcImage, BYTE* dstImage, INT imageWidth, INT imageHeight
 
 
 /*可以翻转400*640的图片,不过没有考虑长度不为偶数的情况 */
-void myflip(BYTE* rawdata, size_t img_height, size_t img_width, BYTE* desdata) {
+void myflip(uint8_t* rawdata, size_t img_height, size_t img_width, uint8_t* desdata) {
     for (size_t i = 0; i < img_height; i++) {
         memcpy_s(desdata + ((img_height - 1L - i) * img_width), img_width, (rawdata + img_width * i), img_width);
     }

@@ -36,41 +36,41 @@
 
 typedef struct _BMPFILEHEAD
 {
-	//WORD bfType;      //文件类型，必须为 "BM"(0x4D42)
-	DWORD bfSize;     //文件大小
-	WORD bfReserved1; //保留字，不考虑
-	WORD bfReserved2; //保留字，同上
-	DWORD bfOffBits;  //实际位图数据的偏移字节数，即前三个部分长度之和
+	//uint16_t bfType;      //文件类型，必须为 "BM"(0x4D42)
+	uint32_t bfSize;     //文件大小
+	uint16_t bfReserved1; //保留字，不考虑
+	uint16_t bfReserved2; //保留字，同上
+	uint32_t bfOffBits;  //实际位图数据的偏移字节数，即前三个部分长度之和
 } MY_BMPFILEHEAD;
 //上面定义的结构体长度刚好为12，4的倍数 bfType拿出来
 
 typedef struct _BMPFILETYPE
 {
-	WORD bfType; //文件类型，必须为 "BM"(0x4D42)
+	uint16_t bfType; //文件类型，必须为 "BM"(0x4D42)
 } MY_BMPFILETYPE;
 
 typedef struct _BMPINFOHEAD
 {
-	DWORD biSize;         //指定此结构体的长度，为40
-	LONG biWidth;         //位图宽
-	LONG biHeight;        //位图高
-	WORD biPlanes;        //平面数，为1
-	WORD biBitCount;      //采用颜色位数，可以是1，2，4，8，16，24，新的可以是32
-	DWORD biCompression;  //压缩方式，可以是0，1，2，其中0表示不压缩
-	DWORD biSizeImage;    //实际位图数据占用的字节数
-	LONG biXPelsPerMeter; //X方向分辨率
-	LONG biYPelsPerMeter; //Y方向分辨率
-	DWORD biClrUsed;      //使用的颜色数，如果为0，则表示默认值(2^颜色位数)
-	DWORD biClrImportant; //重要颜色数，如果为0，则表示所有颜色都是重要的
+	uint32_t biSize;         //指定此结构体的长度，为40
+	uint32_t biWidth;         //位图宽
+	uint32_t biHeight;        //位图高
+	uint16_t biPlanes;        //平面数，为1
+	uint16_t biBitCount;      //采用颜色位数，可以是1，2，4，8，16，24，新的可以是32
+	uint32_t biCompression;  //压缩方式，可以是0，1，2，其中0表示不压缩
+	uint32_t biSizeImage;    //实际位图数据占用的字节数
+	uint32_t biXPelsPerMeter; //X方向分辨率
+	uint32_t biYPelsPerMeter; //Y方向分辨率
+	uint32_t biClrUsed;      //使用的颜色数，如果为0，则表示默认值(2^颜色位数)
+	uint32_t biClrImportant; //重要颜色数，如果为0，则表示所有颜色都是重要的
 } MY_BMPINFOHEAD;
 
 typedef struct _RGBQUAD
 {
 	//public:
-	BYTE rgbBlue;     //蓝色分量
-	BYTE rgbGreen;    //绿色分量
-	BYTE rgbRed;      //红色分量
-	BYTE rgbReserved; //保留值,必须为0
+	uint8_t rgbBlue;     //蓝色分量
+	uint8_t rgbGreen;    //绿色分量
+	uint8_t rgbRed;      //红色分量
+	uint8_t rgbReserved; //保留值,必须为0
 } RGBQUAD_s;
 
 
@@ -172,26 +172,26 @@ extern "C"
 
 
 	/*
-	*@brief 将未加工的原始数据加上一个8位灰度图的头
+	*@brief 将未加工的原始数据加上一个8位灰度图的头，同时图片会做上下翻转，因为bmp在按行读取的时候从最后一行读取到第一行
 	*
-	*@param     pixData                 原始数据								IN
-	*@param     width                   图片宽								IN
-	*@param     height                  图片高								IN
-	*@param     desData                 内存中加完头的数据块,需提前分配好内存块	INOUT
+	*@param     pixData                 原始数据										IN
+	*@param     width                   图片宽										IN
+	*@param     height                  图片高										IN
+	*@param     desData                 内存中加完头的数据块,需提前分配好足够的内存块	INOUT
 	*@return 无意义
 	*@author pipawancui
 	 **/
-	int UTILSAPI add8GreyBmpHead(BYTE* pixData, int16_t width, int16_t height, BYTE* desData);
+	int UTILSAPI add8GreyBmpHead(uint8_t* pixData, int width, int height, uint8_t* desData);
 
 	/*
-	* @brief 将原始数据加上8位灰度头，输出到一个文件中
+	* @brief 将原始数据加上8位灰度头，输出到一个文件中，图片会先输出最后一行，从下往上，按行输出，直到输出到第一行
 	* @param    pixData     原始数据			IN
 	* @param    width       图片宽			IN
 	* @param    height      图片高			IN
 	* @param    filepath    输出的文件路径	IN
 	* @return 无意义
 	*/
-	int UTILSAPI add8GreyBmpHead2File(BYTE* pixData, int width, int height, const char* desFile);
+	int UTILSAPI add8GreyBmpHead2File(uint8_t* pixData, int width, int height, const char* desFile);
 
 
 
