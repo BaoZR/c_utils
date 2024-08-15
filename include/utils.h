@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <direct.h>
 #include <corecrt_io.h>
@@ -28,49 +28,49 @@
 
 
 
-/* bits±íÊ¾Ò»¸öÎ»£¬Òª×ª»»³É×Ö½Ú±ØĞë  bits/8   µ«ÊÇÕâÑù¿ÉÄÜ²úÉúÎÊÌâ£¬
-ÀıÈç¸Ã×Ö½ÚÊÇ32¸ö×Ö½ÚÔòÕ¼4Î»£¬ÄÇÃ´33¸ö×Ö½ÚÄØ£¬
-°´ÉÏÃæµÄ°ì·¨°Ñ33--64¸ö×Ö½ÚµÄÍ¼Ïñ×Ö½Ú£¬¶¼ÈÏÎªËüÕ¼8Î»¡£
-ËùÒÔÈç¹û²»µ½32µÄÕûÊı   ¼ÓÒ»¸ö31ÔÙ³ı32³Ë8±ã¿ÉÒÔ½â¾öÁãÍ·»¯Îª4µÄ±¶ÊıÁË¡£ */
+/* bitsè¡¨ç¤ºä¸€ä¸ªä½ï¼Œè¦è½¬æ¢æˆå­—èŠ‚å¿…é¡»  bits/8   ä½†æ˜¯è¿™æ ·å¯èƒ½äº§ç”Ÿé—®é¢˜ï¼Œ
+ä¾‹å¦‚è¯¥å­—èŠ‚æ˜¯32ä¸ªå­—èŠ‚åˆ™å 4ä½ï¼Œé‚£ä¹ˆ33ä¸ªå­—èŠ‚å‘¢ï¼Œ
+æŒ‰ä¸Šé¢çš„åŠæ³•æŠŠ33--64ä¸ªå­—èŠ‚çš„å›¾åƒå­—èŠ‚ï¼Œéƒ½è®¤ä¸ºå®ƒå 8ä½ã€‚
+æ‰€ä»¥å¦‚æœä¸åˆ°32çš„æ•´æ•°   åŠ ä¸€ä¸ª31å†é™¤32ä¹˜8ä¾¿å¯ä»¥è§£å†³é›¶å¤´åŒ–ä¸º4çš„å€æ•°äº†ã€‚ */
 #define WIDTHBYTES(bits) (((bits) + 31) / 32 * 4)
 
 typedef struct _BMPFILEHEAD
 {
-	//WORD bfType;      //ÎÄ¼şÀàĞÍ£¬±ØĞëÎª "BM"(0x4D42)
-	DWORD bfSize;     //ÎÄ¼ş´óĞ¡
-	WORD bfReserved1; //±£Áô×Ö£¬²»¿¼ÂÇ
-	WORD bfReserved2; //±£Áô×Ö£¬Í¬ÉÏ
-	DWORD bfOffBits;  //Êµ¼ÊÎ»Í¼Êı¾İµÄÆ«ÒÆ×Ö½ÚÊı£¬¼´Ç°Èı¸ö²¿·Ö³¤¶ÈÖ®ºÍ
-} BMPFILEHEAD;
-//ÉÏÃæ¶¨ÒåµÄ½á¹¹Ìå³¤¶È¸ÕºÃÎª12£¬4µÄ±¶Êı bfTypeÄÃ³öÀ´
+	//WORD bfType;      //æ–‡ä»¶ç±»å‹ï¼Œå¿…é¡»ä¸º "BM"(0x4D42)
+	DWORD bfSize;     //æ–‡ä»¶å¤§å°
+	WORD bfReserved1; //ä¿ç•™å­—ï¼Œä¸è€ƒè™‘
+	WORD bfReserved2; //ä¿ç•™å­—ï¼ŒåŒä¸Š
+	DWORD bfOffBits;  //å®é™…ä½å›¾æ•°æ®çš„åç§»å­—èŠ‚æ•°ï¼Œå³å‰ä¸‰ä¸ªéƒ¨åˆ†é•¿åº¦ä¹‹å’Œ
+} MY_BMPFILEHEAD;
+//ä¸Šé¢å®šä¹‰çš„ç»“æ„ä½“é•¿åº¦åˆšå¥½ä¸º12ï¼Œ4çš„å€æ•° bfTypeæ‹¿å‡ºæ¥
 
 typedef struct _BMPFILETYPE
 {
-	WORD bfType; //ÎÄ¼şÀàĞÍ£¬±ØĞëÎª "BM"(0x4D42)
-} BMPFILETYPE;
+	WORD bfType; //æ–‡ä»¶ç±»å‹ï¼Œå¿…é¡»ä¸º "BM"(0x4D42)
+} MY_BMPFILETYPE;
 
 typedef struct _BMPINFOHEAD
 {
-	DWORD biSize;         //Ö¸¶¨´Ë½á¹¹ÌåµÄ³¤¶È£¬Îª40
-	LONG biWidth;         //Î»Í¼¿í
-	LONG biHeight;        //Î»Í¼¸ß
-	WORD biPlanes;        //Æ½ÃæÊı£¬Îª1
-	WORD biBitCount;      //²ÉÓÃÑÕÉ«Î»Êı£¬¿ÉÒÔÊÇ1£¬2£¬4£¬8£¬16£¬24£¬ĞÂµÄ¿ÉÒÔÊÇ32
-	DWORD biCompression;  //Ñ¹Ëõ·½Ê½£¬¿ÉÒÔÊÇ0£¬1£¬2£¬ÆäÖĞ0±íÊ¾²»Ñ¹Ëõ
-	DWORD biSizeImage;    //Êµ¼ÊÎ»Í¼Êı¾İÕ¼ÓÃµÄ×Ö½ÚÊı
-	LONG biXPelsPerMeter; //X·½Ïò·Ö±æÂÊ
-	LONG biYPelsPerMeter; //Y·½Ïò·Ö±æÂÊ
-	DWORD biClrUsed;      //Ê¹ÓÃµÄÑÕÉ«Êı£¬Èç¹ûÎª0£¬Ôò±íÊ¾Ä¬ÈÏÖµ(2^ÑÕÉ«Î»Êı)
-	DWORD biClrImportant; //ÖØÒªÑÕÉ«Êı£¬Èç¹ûÎª0£¬Ôò±íÊ¾ËùÓĞÑÕÉ«¶¼ÊÇÖØÒªµÄ
-} BMPINFOHEAD;
+	DWORD biSize;         //æŒ‡å®šæ­¤ç»“æ„ä½“çš„é•¿åº¦ï¼Œä¸º40
+	LONG biWidth;         //ä½å›¾å®½
+	LONG biHeight;        //ä½å›¾é«˜
+	WORD biPlanes;        //å¹³é¢æ•°ï¼Œä¸º1
+	WORD biBitCount;      //é‡‡ç”¨é¢œè‰²ä½æ•°ï¼Œå¯ä»¥æ˜¯1ï¼Œ2ï¼Œ4ï¼Œ8ï¼Œ16ï¼Œ24ï¼Œæ–°çš„å¯ä»¥æ˜¯32
+	DWORD biCompression;  //å‹ç¼©æ–¹å¼ï¼Œå¯ä»¥æ˜¯0ï¼Œ1ï¼Œ2ï¼Œå…¶ä¸­0è¡¨ç¤ºä¸å‹ç¼©
+	DWORD biSizeImage;    //å®é™…ä½å›¾æ•°æ®å ç”¨çš„å­—èŠ‚æ•°
+	LONG biXPelsPerMeter; //Xæ–¹å‘åˆ†è¾¨ç‡
+	LONG biYPelsPerMeter; //Yæ–¹å‘åˆ†è¾¨ç‡
+	DWORD biClrUsed;      //ä½¿ç”¨çš„é¢œè‰²æ•°ï¼Œå¦‚æœä¸º0ï¼Œåˆ™è¡¨ç¤ºé»˜è®¤å€¼(2^é¢œè‰²ä½æ•°)
+	DWORD biClrImportant; //é‡è¦é¢œè‰²æ•°ï¼Œå¦‚æœä¸º0ï¼Œåˆ™è¡¨ç¤ºæ‰€æœ‰é¢œè‰²éƒ½æ˜¯é‡è¦çš„
+} MY_BMPINFOHEAD;
 
 typedef struct _RGBQUAD
 {
 	//public:
-	BYTE rgbBlue;     //À¶É«·ÖÁ¿
-	BYTE rgbGreen;    //ÂÌÉ«·ÖÁ¿
-	BYTE rgbRed;      //ºìÉ«·ÖÁ¿
-	BYTE rgbReserved; //±£ÁôÖµ,±ØĞëÎª0
+	BYTE rgbBlue;     //è“è‰²åˆ†é‡
+	BYTE rgbGreen;    //ç»¿è‰²åˆ†é‡
+	BYTE rgbRed;      //çº¢è‰²åˆ†é‡
+	BYTE rgbReserved; //ä¿ç•™å€¼,å¿…é¡»ä¸º0
 } RGBQUAD_s;
 
 
@@ -80,116 +80,116 @@ extern "C"
 {
 #endif
 
-	/*@brief ½«Ö¸¶¨´óĞ¡µÄÄÚ´æ¿éĞ´Èëµ½¸ø¶¨ÎÄ¼şÖĞ
-	* @param    pucBuff    ½«±»¸´ÖÆµÄÊı¾İÔ´             IN
-	* @param    uiBuffSize ÒªĞ´ÈëµÄ³¤¶È                 IN
-	* @param    pcFileNm   Ä¿±êÎÄ¼şÃû,ĞèÒªÌá¹©ÍêÕûÂ·¾¶   IN
-	* @return   ·Ç¸ºÊı,·µ»ØĞ´ÈëµÄ³¤¶È;¸ºÊı,ÓĞ´íÎó·¢Éú
+	/*@brief å°†æŒ‡å®šå¤§å°çš„å†…å­˜å—å†™å…¥åˆ°ç»™å®šæ–‡ä»¶ä¸­
+	* @param    pucBuff    å°†è¢«å¤åˆ¶çš„æ•°æ®æº             IN
+	* @param    uiBuffSize è¦å†™å…¥çš„é•¿åº¦                 IN
+	* @param    pcFileNm   ç›®æ ‡æ–‡ä»¶å,éœ€è¦æä¾›å®Œæ•´è·¯å¾„   IN
+	* @return   éè´Ÿæ•°,è¿”å›å†™å…¥çš„é•¿åº¦;è´Ÿæ•°,æœ‰é”™è¯¯å‘ç”Ÿ
 	*/
 	size_t UTILSAPI write_data_hex(unsigned char* pucBuff, size_t uiBuffSize, const char* pcFileNm);
 
-	/*@brief ´ÓÔ´ÎÄ¼şÖĞ¶ÁÈ¡Ö¸¶¨´óĞ¡ÄÚÈİµ½ÄÚ´æ¿éÖĞ
-	* @param    pucBuff     ´ıĞ´ÈëµÄÄÚ´æ¿é£¬ĞèÌáÇ°·ÖÅäºÃÄÚ´æ     INOUT
-	* @param    uiBuffSize  ´ı¶ÁÈëÄÚÈİµÄ³¤¶È                    IN
-	* @param    pcFileNm    Ô´ÎÄ¼şµÄÍêÕûÂ·¾¶                    IN
-	* @return ·Ç¸ºÊı,·µ»Ø¶ÁÈëµÄ³¤¶È´óĞ¡;¸ºÊı,ÓĞ´íÎó·¢Éú
+	/*@brief ä»æºæ–‡ä»¶ä¸­è¯»å–æŒ‡å®šå¤§å°å†…å®¹åˆ°å†…å­˜å—ä¸­
+	* @param    pucBuff     å¾…å†™å…¥çš„å†…å­˜å—ï¼Œéœ€æå‰åˆ†é…å¥½å†…å­˜     INOUT
+	* @param    uiBuffSize  å¾…è¯»å…¥å†…å®¹çš„é•¿åº¦                    IN
+	* @param    pcFileNm    æºæ–‡ä»¶çš„å®Œæ•´è·¯å¾„                    IN
+	* @return éè´Ÿæ•°,è¿”å›è¯»å…¥çš„é•¿åº¦å¤§å°;è´Ÿæ•°,æœ‰é”™è¯¯å‘ç”Ÿ
 	*/
 	size_t UTILSAPI read_data_hex(unsigned char* pucBuff, size_t uiBuffSize, const char* pcFileNm);
 
-	/*@brief ÌáÈ¡Ïà¶ÔappÂ·¾¶ÏÂÆ¥Åäµ½µÄÎÄ¼şÃû
-	 *@param  addr           ÎÄ¼şÂ·¾¶ Ïà¶ÔAPPµÄÂ·¾¶                      IN
-	 *@param  pattern	     Ãû×ÖÆ¥ÅäÄ£°å ¿É°üº¬*»òÕß£¿                   IN
-	 *@param  name_list      Ãû×Ö»º´æÂ·¾¶»ùµØÖ· ĞèÌáÇ°·ÖÅäºÃÄÚ´æ´óĞ¡       INOUT
-	 *@param  name_size      µ¥¸öÃû×ÖÔ¤ÁôµÄ³¤¶È                          IN
-	 *@param  name_max_count ÎÄ¼şÃûµÄ¸öÊı£¬ĞèÒªÌáÇ°ÖªµÀÓĞ¶àÉÙÎÄ¼şÁË        IN
-	 *@return ·µ»ØÖµÎªÕÒµ½µÄÎÄ¼ş¸öÊı
+	/*@brief æå–ç›¸å¯¹appè·¯å¾„ä¸‹åŒ¹é…åˆ°çš„æ–‡ä»¶å
+	 *@param  addr           æ–‡ä»¶è·¯å¾„ ç›¸å¯¹APPçš„è·¯å¾„                      IN
+	 *@param  pattern	     åå­—åŒ¹é…æ¨¡æ¿ å¯åŒ…å«*æˆ–è€…ï¼Ÿ                   IN
+	 *@param  name_list      åå­—ç¼“å­˜è·¯å¾„åŸºåœ°å€ éœ€æå‰åˆ†é…å¥½å†…å­˜å¤§å°       INOUT
+	 *@param  name_size      å•ä¸ªåå­—é¢„ç•™çš„é•¿åº¦                          IN
+	 *@param  name_max_count æ–‡ä»¶åçš„ä¸ªæ•°ï¼Œéœ€è¦æå‰çŸ¥é“æœ‰å¤šå°‘æ–‡ä»¶äº†        IN
+	 *@return è¿”å›å€¼ä¸ºæ‰¾åˆ°çš„æ–‡ä»¶ä¸ªæ•°
 	 */
 	int UTILSAPI list_matched_filename_app(const char* folder, const char* pattern, char* name_list, int name_size, int name_max_count);
 
-	/*@brief ÔÚ¿ØÖÆÌ¨´òÓ¡Ïà¶ÔappÂ·¾¶ÏÂÆ¥Åäµ½µÄÎÄ¼şÃû
-	* @param  folder     ÎÄ¼ş¼ĞÏà¶ÔAPPµÄÂ·¾¶						IN
-	* @param  pattern    Ãû×Ö									IN
-	* @return ·µ»ØÆ¥Åäµ½µÄÎÄ¼şÃûÊıÁ¿,·µ»Ø0±íÊ¾Ã»ÓĞÆ¥Åäµ½ÈÎºÎÎÄ¼şÃû
+	/*@brief åœ¨æ§åˆ¶å°æ‰“å°ç›¸å¯¹appè·¯å¾„ä¸‹åŒ¹é…åˆ°çš„æ–‡ä»¶å
+	* @param  folder     æ–‡ä»¶å¤¹ç›¸å¯¹APPçš„è·¯å¾„						IN
+	* @param  pattern    åå­—									IN
+	* @return è¿”å›åŒ¹é…åˆ°çš„æ–‡ä»¶åæ•°é‡,è¿”å›0è¡¨ç¤ºæ²¡æœ‰åŒ¹é…åˆ°ä»»ä½•æ–‡ä»¶å
 	*/
 	int UTILSAPI print_matched_filename_app(const char* folder, const char* pattern);
 
-	/*@brief Ò»¸ö×Ô¶¯»¯µÄº¯Êı£¬¿ÉÒÔÃ¶¾ÙÏà¶ÔappÂ·¾¶ÏÂÆ¥Åäµ½µÄÎÄ¼şÃû,Òª¼ÇµÃÊÍ·Åname_listÖĞ·ÖÅäµÄÄÚ´æ
-	 *@param  folder         ÎÄ¼şÂ·¾¶ Ïà¶ÔAPPµÄÂ·¾¶																					IN
-	 *@param  pattern	     Ãû×ÖÆ¥ÅäÄ£°å ¿É°üº¬*»òÕß£¿																				IN
-	 *@param  name_list      Ãû×Ö»º´æÂ·¾¶»ùµØÖ·£¬´«²ÎÊ±´«ÈëÒ»¸öÖ¸ÕëµÄµØÖ·£¬¼ÇµÃÊÍ·ÅÔÚº¯ÊıÖĞ·ÖÅäµÄÄÚ´æ£¨²»µÃ²»ÕâÃ´Ğ´£¬²»ÖªµÀÒªÔ¤ÏÈ·ÖÅä¶àÉÙÄÚ´æ£©OUT
-	 *@param  name_size      Ã¿¸öÃû×ÖµÄ³¤¶È																							IN
-	 *@param  name_count     ÎÄ¼şÃûµÄ¸öÊı£¬»áÔÚº¯ÊıÖĞ¸³Öµ¡£																			OUT
-	 *@return ·Ç¸ºÖµÎªÕÒµ½µÄÎÄ¼ş¸öÊı£¬Èç¹ûÎª¸ºÖµÔò·¢ÉúÁËÒì³£
+	/*@brief ä¸€ä¸ªè‡ªåŠ¨åŒ–çš„å‡½æ•°ï¼Œå¯ä»¥æšä¸¾ç›¸å¯¹appè·¯å¾„ä¸‹åŒ¹é…åˆ°çš„æ–‡ä»¶å,è¦è®°å¾—é‡Šæ”¾name_listä¸­åˆ†é…çš„å†…å­˜
+	 *@param  folder         æ–‡ä»¶è·¯å¾„ ç›¸å¯¹APPçš„è·¯å¾„																					IN
+	 *@param  pattern	     åå­—åŒ¹é…æ¨¡æ¿ å¯åŒ…å«*æˆ–è€…ï¼Ÿ																				IN
+	 *@param  name_list      åå­—ç¼“å­˜è·¯å¾„åŸºåœ°å€ï¼Œä¼ å‚æ—¶ä¼ å…¥ä¸€ä¸ªæŒ‡é’ˆçš„åœ°å€ï¼Œè®°å¾—é‡Šæ”¾åœ¨å‡½æ•°ä¸­åˆ†é…çš„å†…å­˜ï¼ˆä¸å¾—ä¸è¿™ä¹ˆå†™ï¼Œä¸çŸ¥é“è¦é¢„å…ˆåˆ†é…å¤šå°‘å†…å­˜ï¼‰OUT
+	 *@param  name_size      æ¯ä¸ªåå­—çš„é•¿åº¦																							IN
+	 *@param  name_count     æ–‡ä»¶åçš„ä¸ªæ•°ï¼Œä¼šåœ¨å‡½æ•°ä¸­èµ‹å€¼ã€‚																			OUT
+	 *@return éè´Ÿå€¼ä¸ºæ‰¾åˆ°çš„æ–‡ä»¶ä¸ªæ•°ï¼Œå¦‚æœä¸ºè´Ÿå€¼åˆ™å‘ç”Ÿäº†å¼‚å¸¸
 	 *@author bob
 	 */
 	int UTILSAPI auto_list_filename_app(const char* folder, const char* pattern, char** name_list, int16_t name_size, int* name_count);
 
 
-	/*@brief ´´½¨Ïà¶ÔappÂ·¾¶ÎÄ¼şµÄÍ¼Æ¬£¬
-	*@param folder   appÖĞµÄÎÄ¼ş¼Ğ												IN
-	*@param rowdata  Í¼Æ¬¾ßÌåÊı¾İ													IN
-	*@param pre_name ÎÄ¼şµÄÇ°×ºÃû£¬Èç¹ûÎªNULL£¬Ôò°´1.bmp£¬2.bmp£¬3.bmp...µÄ·½Ê½Éú³É	IN
-	*@param width    Í¼Æ¬¿í														IN
-	*@param height   Í¼Æ¬¸ß														IN
-	*@return ·µ»ØÖµÎŞÒâÒå
+	/*@brief åˆ›å»ºç›¸å¯¹appè·¯å¾„æ–‡ä»¶çš„å›¾ç‰‡ï¼Œ
+	*@param folder   appä¸­çš„æ–‡ä»¶å¤¹												IN
+	*@param rowdata  å›¾ç‰‡å…·ä½“æ•°æ®													IN
+	*@param pre_name æ–‡ä»¶çš„å‰ç¼€åï¼Œå¦‚æœä¸ºNULLï¼Œåˆ™æŒ‰1.bmpï¼Œ2.bmpï¼Œ3.bmp...çš„æ–¹å¼ç”Ÿæˆ	IN
+	*@param width    å›¾ç‰‡å®½														IN
+	*@param height   å›¾ç‰‡é«˜														IN
+	*@return è¿”å›å€¼æ— æ„ä¹‰
 	*/
 	int UTILSAPI save_gray_bmp_app(const char* folder, const char* pre_name, unsigned char* rowdata, int16_t width, int16_t height);
 
-	/**@brief Í³¼ÆÏà¶ÔappÂ·¾¶ÎÄ¼şÏÂÎÄ¼şµÄÊıÁ¿
-	*@param  folder  Ó¦ÓÃ³ÌĞòÖĞµÄÎÄ¼ş¼Ğ					IN
-	*@param  pattern ÎÄ¼şÆ¥ÅäÄ£°å ¿É°üº¬*»òÕß£¿			IN
-	*@return ¸ºÊı:º¯ÊıÖĞÓĞ´íÎó·¢Éú,·Ç¸ºÊı:Æ¥Åäµ½µÄÎÄ¼ş¸öÊı
+	/**@brief ç»Ÿè®¡ç›¸å¯¹appè·¯å¾„æ–‡ä»¶ä¸‹æ–‡ä»¶çš„æ•°é‡
+	*@param  folder  åº”ç”¨ç¨‹åºä¸­çš„æ–‡ä»¶å¤¹					IN
+	*@param  pattern æ–‡ä»¶åŒ¹é…æ¨¡æ¿ å¯åŒ…å«*æˆ–è€…ï¼Ÿ			IN
+	*@return è´Ÿæ•°:å‡½æ•°ä¸­æœ‰é”™è¯¯å‘ç”Ÿ,éè´Ÿæ•°:åŒ¹é…åˆ°çš„æ–‡ä»¶ä¸ªæ•°
 	*/
 	int UTILSAPI count_filename_app(const char* folder, const char* pattern);
 
 	/*
-	* @brief    ÔÚAPPÖĞ½¨Á¢ÎÄ¼ş¼Ğ
-	* @param    filename Ğè½¨Á¢ÎÄ¼ş¼ĞµÄÃû×Ö					IN
-	* @return   ·µ»Ø¸ºÊı,Éú³ÉÎÄ¼ş¼ĞÖĞ·¢Éú´íÎó;·µ»ØÁã£¬Éú³É³É¹¦
+	* @brief    åœ¨APPä¸­å»ºç«‹æ–‡ä»¶å¤¹
+	* @param    filename éœ€å»ºç«‹æ–‡ä»¶å¤¹çš„åå­—					IN
+	* @return   è¿”å›è´Ÿæ•°,ç”Ÿæˆæ–‡ä»¶å¤¹ä¸­å‘ç”Ÿé”™è¯¯;è¿”å›é›¶ï¼Œç”ŸæˆæˆåŠŸ
 	*/
 	int UTILSAPI creat_dir_in_app(const char* filename);
 
 	/*
-	* @brief    Éú³ÉÖ¸¶¨Â·¾¶µÄÎÄ¼ş¼Ğ
-	* @param    fullpath Ö¸¶¨µÄÈ«Â·¾¶					IN
-	* @return   ¸ºÊı:Éú³ÉÎÄ¼ş¼ĞÖĞ·¢Éú´íÎó;0:Éú³É³É¹¦
+	* @brief    ç”ŸæˆæŒ‡å®šè·¯å¾„çš„æ–‡ä»¶å¤¹
+	* @param    fullpath æŒ‡å®šçš„å…¨è·¯å¾„					IN
+	* @return   è´Ÿæ•°:ç”Ÿæˆæ–‡ä»¶å¤¹ä¸­å‘ç”Ÿé”™è¯¯;0:ç”ŸæˆæˆåŠŸ
 	*/
 	int UTILSAPI mkdirs(const char* fullpath);
 
-	/**@brief »ñÈ¡appËùÔÚÎÄ¼ş¼ĞÂ·¾¶
-	*@param   char*  app_path appËùÔÚÎÄ¼ş¼ĞµÄÂ·¾¶,ĞèÒªÌáÇ°·ÖÅäºÃÄÚ´æ,·ÖÅäµÄÄÚ´æ²»Ğ¡ÓÚ,FILENAME_MAX	INOUT
-	*@return  ¸ºÊı:º¯ÊıÖĞ·¢Éú´íÎó,0:Õı³£·µ»Ø
+	/**@brief è·å–appæ‰€åœ¨æ–‡ä»¶å¤¹è·¯å¾„
+	*@param   char*  app_path appæ‰€åœ¨æ–‡ä»¶å¤¹çš„è·¯å¾„,éœ€è¦æå‰åˆ†é…å¥½å†…å­˜,åˆ†é…çš„å†…å­˜ä¸å°äº,FILENAME_MAX	INOUT
+	*@return  è´Ÿæ•°:å‡½æ•°ä¸­å‘ç”Ÿé”™è¯¯,0:æ­£å¸¸è¿”å›
 	*/
 	int UTILSAPI get_app_path(char* app_path);
 
-	/**@brief ½«Ö¸¶¨ÎÄ¼ş¼ÓÔØ½øÄÚ´æ
-	*@param filename Òª¶ÁÈ¡µÄÎÄ¼şÃû												IN
-	*@param buff     Ğè´«Èë¶ş¼¶Ö¸Õë,»º´æÎÄ¼şµÄÄÚ´æ¿é,ÔÚº¯ÊıÄÚ·ÖÅä,Ê¹ÓÃÍêĞèÒªÊÖ¶¯Çå³ı	OUT
-	*@param int      ·µ»Ø¶ÁÈ¡ÎÄ¼şµÄ³¤¶È											OUT
-	*@return 0:³É¹¦¼ÓÔØ½øÄÚ´æ,¸ºÊı:·¢ÉúÁË´íÎó
+	/**@brief å°†æŒ‡å®šæ–‡ä»¶åŠ è½½è¿›å†…å­˜
+	*@param filename è¦è¯»å–çš„æ–‡ä»¶å												IN
+	*@param buff     éœ€ä¼ å…¥äºŒçº§æŒ‡é’ˆ,ç¼“å­˜æ–‡ä»¶çš„å†…å­˜å—,åœ¨å‡½æ•°å†…åˆ†é…,ä½¿ç”¨å®Œéœ€è¦æ‰‹åŠ¨æ¸…é™¤	OUT
+	*@param int      è¿”å›è¯»å–æ–‡ä»¶çš„é•¿åº¦											OUT
+	*@return 0:æˆåŠŸåŠ è½½è¿›å†…å­˜,è´Ÿæ•°:å‘ç”Ÿäº†é”™è¯¯
 	*/
 	int UTILSAPI load_file(const char* file_path, unsigned char** buff, size_t* file_len);
 
 
 	/*
-	*@brief ½«Î´¼Ó¹¤µÄÔ­Ê¼Êı¾İ¼ÓÉÏÒ»¸ö8Î»»Ò¶ÈÍ¼µÄÍ·
+	*@brief å°†æœªåŠ å·¥çš„åŸå§‹æ•°æ®åŠ ä¸Šä¸€ä¸ª8ä½ç°åº¦å›¾çš„å¤´
 	*
-	*@param     pixData                 Ô­Ê¼Êı¾İ								IN
-	*@param     width                   Í¼Æ¬¿í								IN
-	*@param     height                  Í¼Æ¬¸ß								IN
-	*@param     desData                 ÄÚ´æÖĞ¼ÓÍêÍ·µÄÊı¾İ¿é,ĞèÌáÇ°·ÖÅäºÃÄÚ´æ¿é	INOUT
-	*@return ÎŞÒâÒå
+	*@param     pixData                 åŸå§‹æ•°æ®								IN
+	*@param     width                   å›¾ç‰‡å®½								IN
+	*@param     height                  å›¾ç‰‡é«˜								IN
+	*@param     desData                 å†…å­˜ä¸­åŠ å®Œå¤´çš„æ•°æ®å—,éœ€æå‰åˆ†é…å¥½å†…å­˜å—	INOUT
+	*@return æ— æ„ä¹‰
 	*@author pipawancui
 	 **/
 	int UTILSAPI add8GreyBmpHead(BYTE* pixData, int16_t width, int16_t height, BYTE* desData);
 
 	/*
-	* @brief ½«Ô­Ê¼Êı¾İ¼ÓÉÏ8Î»»Ò¶ÈÍ·£¬Êä³öµ½Ò»¸öÎÄ¼şÖĞ
-	* @param    pixData     Ô­Ê¼Êı¾İ			IN
-	* @param    width       Í¼Æ¬¿í			IN
-	* @param    height      Í¼Æ¬¸ß			IN
-	* @param    filepath    Êä³öµÄÎÄ¼şÂ·¾¶	IN
-	* @return ÎŞÒâÒå
+	* @brief å°†åŸå§‹æ•°æ®åŠ ä¸Š8ä½ç°åº¦å¤´ï¼Œè¾“å‡ºåˆ°ä¸€ä¸ªæ–‡ä»¶ä¸­
+	* @param    pixData     åŸå§‹æ•°æ®			IN
+	* @param    width       å›¾ç‰‡å®½			IN
+	* @param    height      å›¾ç‰‡é«˜			IN
+	* @param    filepath    è¾“å‡ºçš„æ–‡ä»¶è·¯å¾„	IN
+	* @return æ— æ„ä¹‰
 	*/
 	int UTILSAPI add8GreyBmpHead2File(BYTE* pixData, int width, int height, const char* desFile);
 

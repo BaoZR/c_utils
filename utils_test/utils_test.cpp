@@ -1,8 +1,6 @@
 ﻿// utils_test.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
-#ifdef _DEBUG
-#include <vld.h>
-#endif
+
 #define UTILS_DLL_EXPORT
 #include "../include/utils.h"
 
@@ -38,18 +36,10 @@ int test(char** foo);
 
 int main()
 {
-    srand((int)time(NULL));
-    BYTE* buff = (BYTE*)malloc(500 * 200);
 
-    for (int i = 0; i < 500 * 200; i++) {
-        int t = rand() % 256;
-        char c = t;
-        memcpy_s(buff + i, 1, &c, 1);
-    }
-    save_gray_bmp_app("picture", NULL, buff, 500, 200);
+    save_gray_bmp_app("picture", NULL, arr, 640, 480);
     //FILE* fp = fopen("rgb.png", "wb+");
     //svpng(fp, 500, 200, buff, 0);
-    free(buff);
     
     char* namelist = NULL;
     int name_count;
